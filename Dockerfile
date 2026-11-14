@@ -69,7 +69,7 @@ RUN bash $STARTUPDIR/set_user_permission.sh $STARTUPDIR $HOME && \
 
 ### Create user and home directory for base images that don't already define it
 RUN (groupadd -g 1000 kasm-user \
-    && useradd -M -u 1000 -g 1000 kasm-user \
+    && useradd -M -u 1000 -g 1000 -s /bin/bash kasm-user \
     && usermod -a -G kasm-user kasm-user \
     && echo 'kasm-user ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers) ; exit 0
 ENV HOME=/home/kasm-user

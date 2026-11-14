@@ -3,7 +3,7 @@ variable "IMAGE" {
 }
 
 variable "VERSION" {
-  default = "1.0.2"
+  default = "1.0.3"
 }
 
 group "default" {
