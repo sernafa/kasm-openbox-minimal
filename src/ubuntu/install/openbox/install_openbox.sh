@@ -47,8 +47,11 @@ if [[ "$DISTRO" = @(ubuntu|debian) ]]; then
   echo "es_ES.UTF-8 UTF-8" >> /etc/locale.gen
   locale-gen
 
-  # Prefer Noto for generic font families (system default font)
-  cat >/etc/fonts/conf.d/70-noto-defaults.conf <<EOL
+  # Prefer Noto for generic font families (system default font).
+  # Must load BEFORE Debian's 60-latin.conf: fontconfig honors the first
+  # <prefer> rule loaded for a generic family, and 60-latin.conf puts
+  # DejaVu Sans Mono first for monospace.
+  cat >/etc/fonts/conf.d/59-noto-defaults.conf <<EOL
 <?xml version="1.0"?>
 <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
 <fontconfig>
