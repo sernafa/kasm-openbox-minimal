@@ -43,6 +43,7 @@ if [[ "$DISTRO" = @(ubuntu|debian) ]]; then
     x11-xserver-utils \
     xclip \
     xterm \
+    xfce4-clipman \
     tint2
   echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
   echo "es_ES.UTF-8 UTF-8" >> /etc/locale.gen
