@@ -5,7 +5,7 @@ group "default" {
 target "kasm-core-minimal" {
   context = "."
   dockerfile = "Dockerfile"
-  tags = ["sernafa/kasm-core-minimal:1.4.1"]
+  tags = ["sernafa/kasm-ubuntu-openbox-minimal:1.4.1"]
   args = {
     COMMIT_ID = "0a64d3381cf2ebfb53685c9c9c804e8a327bf0a3"
     BRANCH = "master"
@@ -18,7 +18,7 @@ target "kasm-core-minimal" {
 target "kasm-core-minimal-systemd" {
   context = "."
   dockerfile = "Dockerfile.systemd"
-  tags = ["sernafa/kasm-core-minimal:1.4.1-systemd"]
+  tags = ["sernafa/kasm-ubuntu-openbox-minimal:1.4.1-systemd"]
   args = {
     BASE_IMAGE = "antmelekhin/docker-systemd:ubuntu-24.04"
     COMMIT_ID = "0a64d3381cf2ebfb53685c9c9c804e8a327bf0a3"
@@ -32,7 +32,7 @@ target "kasm-core-minimal-systemd" {
 target "kasm-core-minimal_trixie" {
   context = "."
   dockerfile = "Dockerfile"
-  tags = ["sernafa/kasm-core-minimal:1.4.1-trixie"]
+  tags = ["sernafa/kasm-ubuntu-openbox-minimal:1.4.1-trixie"]
   args = {
     COMMIT_ID = "0a64d3381cf2ebfb53685c9c9c804e8a327bf0a3"
     BRANCH = "master"
@@ -47,7 +47,7 @@ target "kasm-core-minimal_trixie" {
 target "kasm-core-minimal_trixie-systemd" {
   context = "."
   dockerfile = "Dockerfile.systemd"
-  tags = ["sernafa/kasm-core-minimal:1.4.1-trixie-systemd"]
+  tags = ["sernafa/kasm-ubuntu-openbox-minimal:1.4.1-trixie-systemd"]
   args = {
     COMMIT_ID = "0a64d3381cf2ebfb53685c9c9c804e8a327bf0a3"
     BRANCH = "master"
@@ -62,7 +62,7 @@ target "kasm-core-minimal_trixie-systemd" {
 target "kasm-core-minimal-1_5_1" {
   context = "."
   dockerfile = "Dockerfile"
-  tags = ["sernafa/kasm-core-minimal:1.5.1"]
+  tags = ["sernafa/kasm-ubuntu-openbox-minimal:1.5.1"]
   args = {
     KASMVNC_COMMIT_ID = "582662953c819ade9ed4b620a5646546d8d7de7b"
     KASMVNC_BRANCH = "release"
@@ -77,7 +77,7 @@ target "kasm-core-minimal-1_5_1" {
 target "kasm-core-minimal-systemd-1_5_1" {
   context = "."
   dockerfile = "Dockerfile.systemd"
-  tags = ["sernafa/kasm-core-minimal:1.5.1-systemd"]
+  tags = ["sernafa/kasm-ubuntu-openbox-minimal:1.5.1-systemd"]
   args = {
     BASE_IMAGE = "antmelekhin/docker-systemd:ubuntu-24.04"
     KASMVNC_COMMIT_ID = "582662953c819ade9ed4b620a5646546d8d7de7b"
@@ -93,7 +93,7 @@ target "kasm-core-minimal-systemd-1_5_1" {
 target "kasm-core-minimal_trixie-1_5_1" {
   context = "."
   dockerfile = "Dockerfile"
-  tags = ["sernafa/kasm-core-minimal:1.5.1-trixie"]
+  tags = ["sernafa/kasm-ubuntu-openbox-minimal:1.5.1-trixie"]
   args = {
     KASMVNC_COMMIT_ID = "582662953c819ade9ed4b620a5646546d8d7de7b"
     KASMVNC_BRANCH = "release"
@@ -110,7 +110,7 @@ target "kasm-core-minimal_trixie-1_5_1" {
 target "kasm-core-minimal_trixie-systemd-1_5_1" {
   context = "."
   dockerfile = "Dockerfile.systemd"
-  tags = ["sernafa/kasm-core-minimal:1.5.1-trixie-systemd"]
+  tags = ["sernafa/kasm-ubuntu-openbox-minimal:1.5.1-trixie-systemd"]
   args = {
     KASMVNC_COMMIT_ID = "582662953c819ade9ed4b620a5646546d8d7de7b"
     KASMVNC_BRANCH = "release"

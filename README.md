@@ -1,7 +1,9 @@
 ## Features
 
 - minimal image size, approximate only 900MB
-- openbox windows manager, as simple as possible
+- openbox window manager with a tint2 panel (taskbar, system tray, clock)
+- default timezone `Europe/Madrid` (override with `-e TZ=...`); `es_ES.UTF-8` locale available (`-e LC_ALL=es_ES.UTF-8`)
+- xterm uses DejaVu Sans Mono
 - python3.12 included
 - vim, iproute2, etc. tools are included
 - no audio, printer, webcam, nvidia, web-browser, mail, etc. keeping everything simple
@@ -14,10 +16,16 @@ Use [docker bake](https://docs.docker.com/build/bake/) to build the multi-arch i
 docker buildx bake --load
 ```
 
+To load a single-arch image into the local Docker store:
+
+```bash
+docker buildx bake --load --set '*.platform=linux/amd64' kasm-core-minimal-1_5_1
+```
+
 ## Usage
 
 ```bash
-docker run --rm -p 6901:6901 -e VNC_PW=password yusiwen/kasm-core-minimal:1.3.4
+docker run --rm -p 6901:6901 -e VNC_PW=password sernafa/kasm-ubuntu-openbox-minimal:1.5.1
 ```
 
 Access [https://localhost:6901](https://localhost:6901) in web browser.
@@ -27,7 +35,7 @@ The default usename is `kasm_user`, password is set by `$VNC_PW`
 If the container is planned to use network other than bridge, such as macvlan, it must be started as:
 
 ```bash
-docker run --rm -p 6901:6901 -e VNC_PW=password -e KASM_NO_VETH=1 yusiwen/kasm-core-minimal:1.3.4
+docker run --rm -p 6901:6901 -e VNC_PW=password -e KASM_NO_VETH=1 sernafa/kasm-ubuntu-openbox-minimal:1.5.1
 ```
 
 The desktop environemnt is OpenBox, use mouse right button to call out the system menu.
@@ -36,12 +44,12 @@ The desktop environemnt is OpenBox, use mouse right button to call out the syste
 
 ### systemd Compatible Image
 
-`yusiwen/kasm-core-minimal:1.3.4-systemd` uses systemd as init process in container.
+`sernafa/kasm-ubuntu-openbox-minimal:1.5.1-systemd` uses systemd as init process in container.
 
 ```bash
-$ docker run --rm -d --name kasm-core-minimal -e VNC_PW=password -p 6901:6901 --shm-size=512m --privileged -v=/sys/fs/cgroup:/sys/fs/cgroup:rw --ulimit nofile=1048576:1048576 --cgroupns=host --user=root yusiwen/kasm-core-minimal:1.3.4-systemd
+$ docker run --rm -d --name kasm-ubuntu-openbox-minimal -e VNC_PW=password -p 6901:6901 --shm-size=512m --privileged -v=/sys/fs/cgroup:/sys/fs/cgroup:rw --ulimit nofile=1048576:1048576 --cgroupns=host --user=root sernafa/kasm-ubuntu-openbox-minimal:1.5.1-systemd
 
-$ docker run kasm-core-minimal systemctl status kasmvnc
+$ docker exec kasm-ubuntu-openbox-minimal systemctl status kasmvnc
 ● kasmvnc.service - KasmVNC Service
      Loaded: loaded (/usr/lib/systemd/system/kasmvnc.service; enabled; preset: enabled)
      Active: active (running) since Tue 2025-09-23 09:11:52 UTC; 28s ago
@@ -75,4 +83,5 @@ Sep 23 09:12:01 7c50f0140db4 kasm_default_profile.sh[143]: Press CTRL+C to quit
 
 # References
 
+- Fork of [yusiwen/kasm-core-minimal](https://github.com/yusiwen/kasm-core-minimal)
 - https://github.com/kasmtech/workspaces-core-images
