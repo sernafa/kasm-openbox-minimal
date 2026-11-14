@@ -43,7 +43,7 @@ The image version (e.g. `1.0.0`) is the project's own versioning and is independ
 
 - Timezone `Europe/Madrid` (`ARG TZ`, override at runtime with `-e TZ=`). Language stays `en_US.UTF-8`; `es_ES.UTF-8` is generated and selectable with `-e LC_ALL=es_ES.UTF-8` (standard image only, see systemd note above).
 - Desktop: Openbox + tint2 (`panel_items = TSC`); default Openbox window buttons, including minimize.
-- xterm uses DejaVu Sans Mono 10 via `~/.Xresources`.
+- System font is Noto (`fonts-noto-core`): fontconfig prefers Noto Sans/Serif/Mono for the generic families via `/etc/fonts/conf.d/70-noto-defaults.conf` (written by `install_openbox.sh`). tint2 and xterm use Noto explicitly; xterm size 10 via `~/.Xresources`. `fonts-dejavu-core` stays installed as fallback.
 - The default profile in `/home/kasm-default-profile` is copied to `$HOME` only if `.bashrc` is missing; a persisted `$HOME` keeps old dotfiles and will not pick up changes to `autostart`, `tint2rc` or `.Xresources`.
 
 ## Version bump workflow

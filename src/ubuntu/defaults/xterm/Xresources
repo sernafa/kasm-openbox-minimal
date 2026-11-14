@@ -1,4 +1,4 @@
-! xterm: use DejaVu Sans Mono (Xft) instead of the default "fixed" bitmap font
+! xterm: use Noto Mono (Xft) as the default monospace font
 XTerm*renderFont: true
-XTerm*faceName: DejaVu Sans Mono
+XTerm*faceName: Noto Mono
 XTerm*faceSize: 10

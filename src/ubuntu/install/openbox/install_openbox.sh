@@ -37,6 +37,7 @@ if [[ "$DISTRO" = @(ubuntu|debian) ]]; then
     curl \
     dbus-x11 \
     fonts-dejavu-core \
+    fonts-noto-core \
     openbox \
     x11-xserver-utils \
     xclip \
@@ -45,6 +46,26 @@ if [[ "$DISTRO" = @(ubuntu|debian) ]]; then
   echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
   echo "es_ES.UTF-8 UTF-8" >> /etc/locale.gen
   locale-gen
+
+  # Prefer Noto for generic font families (system default font)
+  cat >/etc/fonts/conf.d/70-noto-defaults.conf <<EOL
+<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<fontconfig>
+  <alias>
+    <family>sans-serif</family>
+    <prefer><family>Noto Sans</family></prefer>
+  </alias>
+  <alias>
+    <family>serif</family>
+    <prefer><family>Noto Serif</family></prefer>
+  </alias>
+  <alias>
+    <family>monospace</family>
+    <prefer><family>Noto Mono</family></prefer>
+  </alias>
+</fontconfig>
+EOL
 elif [ "$DISTRO" = "alpine" ]; then
   apk add --no-cache \
     curl \
