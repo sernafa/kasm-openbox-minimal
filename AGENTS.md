@@ -52,7 +52,7 @@ To add a new version target, add a new `target` block in `docker-bake.hcl` (copy
 
 ## Git
 
-`origin` is `sernafa/kasm-openbox-minimal`, `upstream` is the original `yusiwen/kasm-core-minimal`. The git credential helper in this environment points to a non-existent `/opt/homebrew/bin/gh`; push with `git -c credential.helper= -c credential.helper='!gh auth git-credential' push` or run `gh auth setup-git`.
+`origin` is `sernafa/kasm-openbox-minimal`, `upstream` is the original `yusiwen/kasm-core-minimal`. Git authentication works out of the box (`gh` is installed at `/opt/homebrew/bin/gh` and logged in); plain `git push` is enough. Pushing a `v*` tag triggers the release workflow; note that the very first tag push after adding CI may not fire the workflow — re-pushing the tag triggers it.
 
 ## CI
 
