@@ -4,6 +4,7 @@
 
 - minimal image size, approximate only 900MB
 - openbox window manager with a tint2 panel (taskbar, system tray, clock)
+- terminator installed and set as the default terminal (`x-terminal-emulator`)
 - default timezone `Europe/Madrid` (override with `-e TZ=...`); `es_ES.UTF-8` locale available (`-e LC_ALL=es_ES.UTF-8`)
 - system font is Noto (`fonts-noto-core`); xterm uses Noto Mono
 - python3.12 included

@@ -39,6 +39,7 @@ if [[ "$DISTRO" = @(ubuntu|debian) ]]; then
     fonts-dejavu-core \
     fonts-noto-core \
     openbox \
+    terminator \
     x11-xserver-utils \
     xclip \
     xterm \
@@ -46,6 +47,10 @@ if [[ "$DISTRO" = @(ubuntu|debian) ]]; then
   echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
   echo "es_ES.UTF-8 UTF-8" >> /etc/locale.gen
   locale-gen
+
+  # Make terminator the default terminal emulator; the Openbox root menu's
+  # "Terminal emulator" entry executes x-terminal-emulator
+  update-alternatives --set x-terminal-emulator /usr/bin/terminator
 
   # Prefer Noto for generic font families (system default font).
   # Must load BEFORE Debian's 60-latin.conf: fontconfig honors the first
