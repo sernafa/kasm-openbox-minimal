@@ -1,3 +1,5 @@
+> **Note:** this project is a fork of [yusiwen/kasm-core-minimal](https://github.com/yusiwen/kasm-core-minimal) and is based on its code, which in turn builds on Kasm Technologies' [workspaces-core-images](https://github.com/kasmtech/workspaces-core-images). All credit for the original work goes to their authors.
+
 ## Features
 
 - minimal image size, approximate only 900MB
