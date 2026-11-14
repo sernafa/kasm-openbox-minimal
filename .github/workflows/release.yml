@@ -1,7 +1,8 @@
 name: Release
 
 # Publishes the default bake target to GHCR when a version tag is pushed.
-# Tag v1.2.3 -> ghcr.io/<owner>/<repo>:1.2.3
+# Tag v1.2.3 -> ghcr.io/<owner>/<repo>:1.2.3. The tags come from
+# docker-bake.hcl with the IMAGE and VERSION variables overridden here.
 
 on:
   push:
@@ -39,16 +40,4 @@ jobs:
         run: |
           IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}"
           echo "Publishing ${IMAGE}:${VERSION}"
-
-          readarray -t TARGETS < <(docker buildx bake --print default | jq -r '.target | keys[]')
-          ARGS=()
-          for target in "${TARGETS[@]}"; do
-            case "$target" in
-              *-trixie-systemd-*) VARIANT="-trixie-systemd" ;;
-              *-systemd-*)        VARIANT="-systemd" ;;
-              *-trixie-*)         VARIANT="-trixie" ;;
-              *)                  VARIANT="" ;;
-            esac
-            ARGS+=(--set "${target}.tags=${IMAGE}:${VERSION}${VARIANT}")
-          done
-          docker buildx bake --push "${ARGS[@]}" default
+          IMAGE="$IMAGE" docker buildx bake --push default

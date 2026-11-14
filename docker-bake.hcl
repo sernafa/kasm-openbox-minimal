@@ -1,20 +1,28 @@
+variable "IMAGE" {
+  default = "sernafa/kasm-openbox-minimal"
+}
+
+variable "VERSION" {
+  default = "1.0.0"
+}
+
 group "default" {
-  targets = ["openbox-1_0_0"]
+  targets = ["openbox"]
 }
 
 group "all" {
   targets = [
-    "openbox-1_0_0",
-    "openbox-systemd-1_0_0",
-    "openbox-trixie-1_0_0",
-    "openbox-trixie-systemd-1_0_0",
+    "openbox",
+    "openbox-systemd",
+    "openbox-trixie",
+    "openbox-trixie-systemd",
   ]
 }
 
-target "openbox-1_0_0" {
+target "openbox" {
   context = "."
   dockerfile = "Dockerfile"
-  tags = ["sernafa/kasm-openbox-minimal:1.0.0"]
+  tags = ["${IMAGE}:${VERSION}"]
   args = {
     KASMVNC_COMMIT_ID = "582662953c819ade9ed4b620a5646546d8d7de7b"
     KASMVNC_BRANCH = "release"
@@ -26,10 +34,10 @@ target "openbox-1_0_0" {
   platforms = ["linux/amd64"]
 }
 
-target "openbox-systemd-1_0_0" {
+target "openbox-systemd" {
   context = "."
   dockerfile = "Dockerfile.systemd"
-  tags = ["sernafa/kasm-openbox-minimal:1.0.0-systemd"]
+  tags = ["${IMAGE}:${VERSION}-systemd"]
   args = {
     BASE_IMAGE = "antmelekhin/docker-systemd:ubuntu-24.04"
     KASMVNC_COMMIT_ID = "582662953c819ade9ed4b620a5646546d8d7de7b"
@@ -42,10 +50,10 @@ target "openbox-systemd-1_0_0" {
   platforms = ["linux/amd64"]
 }
 
-target "openbox-trixie-1_0_0" {
+target "openbox-trixie" {
   context = "."
   dockerfile = "Dockerfile"
-  tags = ["sernafa/kasm-openbox-minimal:1.0.0-trixie"]
+  tags = ["${IMAGE}:${VERSION}-trixie"]
   args = {
     KASMVNC_COMMIT_ID = "582662953c819ade9ed4b620a5646546d8d7de7b"
     KASMVNC_BRANCH = "release"
@@ -59,10 +67,10 @@ target "openbox-trixie-1_0_0" {
   platforms = ["linux/amd64"]
 }
 
-target "openbox-trixie-systemd-1_0_0" {
+target "openbox-trixie-systemd" {
   context = "."
   dockerfile = "Dockerfile.systemd"
-  tags = ["sernafa/kasm-openbox-minimal:1.0.0-trixie-systemd"]
+  tags = ["${IMAGE}:${VERSION}-trixie-systemd"]
   args = {
     KASMVNC_COMMIT_ID = "582662953c819ade9ed4b620a5646546d8d7de7b"
     KASMVNC_BRANCH = "release"

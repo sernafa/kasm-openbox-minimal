@@ -18,16 +18,22 @@ Use [docker bake](https://docs.docker.com/build/bake/) to build the images (sing
 docker buildx bake --load
 ```
 
-This builds the default target (`openbox-1_0_0`, standard Ubuntu image) and loads it into the local Docker store. A specific target can be built with:
+This builds the default target (`openbox`, standard Ubuntu image) and loads it into the local Docker store. A specific target can be built with:
 
 ```bash
-docker buildx bake --load openbox-systemd-1_0_0
+docker buildx bake --load openbox-systemd
 ```
 
 Build and load every variant (standard, systemd, trixie, trixie-systemd) with:
 
 ```bash
 docker buildx bake --load all
+```
+
+Target names are stable across versions. The image name and version come from the `IMAGE` and `VERSION` variables in `docker-bake.hcl` and can be overridden from the environment:
+
+```bash
+IMAGE=sernafa/kasm-openbox-minimal VERSION=1.1.0 docker buildx bake --load openbox
 ```
 
 ## Publishing
@@ -37,7 +43,7 @@ Images are published to the GitHub Container Registry (GHCR) by two GitHub Actio
 - **Release** (`.github/workflows/release.yml`) — automatic. Pushing a `v*` tag (e.g. `v1.0.0`) builds the default bake target and publishes `ghcr.io/<owner>/<repo>:<version>` (tag without the `v`).
 - **Manual build** (`.github/workflows/manual-build.yml`) — manual `workflow_dispatch`. Pick a bake target (any of the four variants or `all`) and a version tag to publish.
 
-Variant suffixes (`-systemd`, `-trixie`, `-trixie-systemd`) are appended automatically based on the chosen target, so each variant gets its own tag.
+Both workflows set the bake file's `IMAGE`/`VERSION` variables, so each variant is published with the suffix defined in `docker-bake.hcl` (`-systemd`, `-trixie`, `-trixie-systemd`) and they never collide.
 
 ## Usage
 

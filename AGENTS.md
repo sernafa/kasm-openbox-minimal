@@ -8,7 +8,7 @@ Fork of [yusiwen/kasm-core-minimal](https://github.com/yusiwen/kasm-core-minimal
 docker buildx bake --load
 ```
 
-The `default` group builds only the `openbox-1_0_0` target (standard Ubuntu image). The `all` group builds every variant: `openbox-1_0_0`, `openbox-systemd-1_0_0`, `openbox-trixie-1_0_0`, `openbox-trixie-systemd-1_0_0`. Targets build for `linux/amd64` only and `--no-cache` is forced in bake config; `--load` loads the images into the local Docker store.
+The `default` group builds only the `openbox` target (standard Ubuntu image). The `all` group builds every variant: `openbox`, `openbox-systemd`, `openbox-trixie`, `openbox-trixie-systemd`. Targets build for `linux/amd64` only and `--no-cache` is forced in bake config; `--load` loads the images into the local Docker store. Target names are stable across versions: the image name and version live in the `IMAGE`/`VERSION` HCL variables of `docker-bake.hcl` (overridable via environment), which is how CI publishes to GHCR. Variant suffixes (`-systemd`, `-trixie`, `-trixie-systemd`) are part of each target's `tags` in the bake file.
 
 The image version (e.g. `1.0.0`) is the project's own versioning and is independent of the bundled upstream component versions set via build args (KasmVNC `1.5.1`, profile-sync `release_2.1.1`).
 
@@ -48,7 +48,7 @@ The image version (e.g. `1.0.0`) is the project's own versioning and is independ
 
 ## Version bump workflow
 
-To add a new version target, add a new `target` block in `docker-bake.hcl` (copy an `openbox-1_0_0` block) with `KASMVNC_COMMIT_ID`, `KASMVNC_BRANCH`, `KASMVNC_VER`, `PROFILE_SYNC_V2_COMMIT_ID`, `PROFILE_SYNC_V2_BRANCH` and corresponding tags, and point the `default`/`all` groups at the new targets. Also update the target `options` list in `.github/workflows/manual-build.yml`. The Dockerfiles accept these as build args to control which KasmVNC and profile-sync builds are downloaded by `install_kasm_vnc.sh` and `install_profile_sync.sh`.
+To add a new version, bump the `VERSION` variable in `docker-bake.hcl` (target names never change, so neither the `default`/`all` groups nor the workflows need edits). When adopting new upstream component versions, update the `KASMVNC_COMMIT_ID`, `KASMVNC_BRANCH`, `KASMVNC_VER`, `PROFILE_SYNC_V2_COMMIT_ID` and `PROFILE_SYNC_V2_BRANCH` args in the same file; the Dockerfiles accept these as build args to control which KasmVNC and profile-sync builds are downloaded by `install_kasm_vnc.sh` and `install_profile_sync.sh`.
 
 ## Git
 
@@ -59,9 +59,9 @@ To add a new version target, add a new `target` block in `docker-bake.hcl` (copy
 Two GitHub Actions workflows publish images to GHCR as `ghcr.io/<owner>/<repo>`:
 
 - `release.yml` — on push of a `v*` tag; builds the `default` bake target and publishes it as `:<version>` (tag without the `v`).
-- `manual-build.yml` — `workflow_dispatch`; pick a bake target (`all` included) and a version tag. Variant suffixes (`-systemd`, `-trixie`, `-trixie-systemd`) are derived from the target name, so the four variants never collide on the same tag.
+- `manual-build.yml` — `workflow_dispatch`; pick a bake target (`all` included) and a version tag.
 
-Both workflows resolve targets from `docker buildx bake --print` and override tags with `--set`, so the `sernafa/...` tags in `docker-bake.hcl` are only used for local builds.
+Both simply set `IMAGE` (ghcr.io form, derived from the repository name) and `VERSION` as environment variables; `docker-bake.hcl` consumes them and applies the variant suffixes, so no tag rewriting happens in CI and the four variants never collide on the same tag.
 
 ## No tests
 

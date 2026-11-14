@@ -1,8 +1,8 @@
 name: Manual build
 
-# Build and publish any bake target to GHCR on demand.
-# The published tag is <version><variant suffix>; e.g. choosing
-# openbox-systemd-1_0_0 with version 1.0.0 publishes
+# Build and publish any bake target to GHCR on demand. The tags come from
+# docker-bake.hcl with the IMAGE and VERSION variables overridden here;
+# e.g. openbox-systemd with version 1.0.0 publishes
 # ghcr.io/<owner>/<repo>:1.0.0-systemd.
 
 on:
@@ -12,12 +12,12 @@ on:
         description: "Bake target to build"
         required: true
         type: choice
-        default: "openbox-1_0_0"
+        default: "openbox"
         options:
-          - openbox-1_0_0
-          - openbox-systemd-1_0_0
-          - openbox-trixie-1_0_0
-          - openbox-trixie-systemd-1_0_0
+          - openbox
+          - openbox-systemd
+          - openbox-trixie
+          - openbox-trixie-systemd
           - all
       version:
         description: "Version tag to publish (e.g. 1.0.0, latest, test)"
@@ -52,16 +52,4 @@ jobs:
         run: |
           IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}"
           echo "Publishing ${IMAGE}:${VERSION} (target: ${TARGET})"
-
-          readarray -t TARGETS < <(docker buildx bake --print "${TARGET}" | jq -r '.target | keys[]')
-          ARGS=()
-          for t in "${TARGETS[@]}"; do
-            case "$t" in
-              *-trixie-systemd-*) VARIANT="-trixie-systemd" ;;
-              *-systemd-*)        VARIANT="-systemd" ;;
-              *-trixie-*)         VARIANT="-trixie" ;;
-              *)                  VARIANT="" ;;
-            esac
-            ARGS+=(--set "${t}.tags=${IMAGE}:${VERSION}${VARIANT}")
-          done
-          docker buildx bake --push "${ARGS[@]}" "${TARGET}"
+          IMAGE="$IMAGE" docker buildx bake --push "${TARGET}"
