@@ -22,7 +22,7 @@ if [ "${DISTRO}" == "alpine" ]; then
 else
   apt-get update
   # Update tzdata noninteractive (otherwise our script is hung on user input later).
-  ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime
+  ln -fs "/usr/share/zoneinfo/${TZ:-Etc/UTC}" /etc/localtime
   DEBIAN_FRONTEND=noninteractive apt-get -y install tzdata
   # Debian (KasmOS) requires a reconfigure because tzdata is already installed
   # On Ubuntu, this is a no-op
@@ -35,8 +35,8 @@ else
     apt-get install -y sudo iproute2 iptables vim wget net-tools locales bzip2 wmctrl software-properties-common mesa-utils bc vulkan-tools
   fi
 
-  echo "generate locales for en_US.UTF-8"
-  locale-gen en_US.UTF-8
+  echo "generate locales for en_US.UTF-8 and es_ES.UTF-8"
+  locale-gen en_US.UTF-8 es_ES.UTF-8
 fi
 
 if [ "$DISTRO" = "ubuntu" ] && ! grep -q "24.04" /etc/os-release; then

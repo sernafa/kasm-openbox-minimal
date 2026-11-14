@@ -9,7 +9,7 @@ ARG DISTRO=ubuntu
 ARG LANG='en_US.UTF-8'
 ARG LANGUAGE='en_US:en'
 ARG LC_ALL='en_US.UTF-8'
-ARG TZ='Etc/UTC'
+ARG TZ='Europe/Madrid'
 ARG KASMVNC_COMMIT_ID=''
 ARG KASMVNC_VER=''
 ARG KASMVNC_BRANCH=master
@@ -118,7 +118,7 @@ ARG LANG='en_US.UTF-8'
 ARG LANGUAGE='en_US:en'
 ARG LC_ALL='en_US.UTF-8'
 ARG START_XFCE4=1
-ARG TZ='Etc/UTC'
+ARG TZ='Europe/Madrid'
 ENV DEBIAN_FRONTEND=noninteractive \
     DISPLAY=:1 \
     DISTRO=$DISTRO \
@@ -158,6 +158,8 @@ USER 1000
 
 COPY ./src/ubuntu/defaults/openbox/autostart .config/openbox/
 COPY ./src/ubuntu/defaults/openbox/menu.xml .config/openbox/
+COPY ./src/ubuntu/defaults/tint2/tint2rc .config/tint2/
+COPY ./src/ubuntu/defaults/xterm/Xresources .Xresources
 
 ENTRYPOINT ["/dockerstartup/kasm_default_profile.sh", "/dockerstartup/vnc_startup.sh", "/dockerstartup/kasm_startup.sh"]
 CMD ["--wait"]

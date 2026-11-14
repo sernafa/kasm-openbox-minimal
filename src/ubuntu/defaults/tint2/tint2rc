@@ -1,0 +1,90 @@
+#---- Backgrounds ----
+# Background 1: panel
+rounded = 0
+border_width = 0
+background_color = #1E1E1E 100
+border_color = #000000 0
+
+# Background 2: active task
+rounded = 2
+border_width = 1
+background_color = #5A87C0 100
+border_color = #8FB4E3 100
+
+# Background 3: normal task
+rounded = 2
+border_width = 1
+background_color = #3A3A3A 100
+border_color = #4A4A4A 100
+
+# Background 4: iconified task
+rounded = 2
+border_width = 1
+background_color = #2A2A2A 100
+border_color = #3A3A3A 100
+
+#---- Panel ----
+panel_items = TSC
+panel_size = 100% 30
+panel_margin = 0 0
+panel_padding = 2 2 4
+panel_background_id = 1
+panel_position = bottom center horizontal
+panel_layer = top
+panel_monitor = all
+panel_dock = 0
+wm_menu = 1
+autohide = 0
+strut_policy = follow_size
+
+#---- Taskbar ----
+taskbar_mode = single_desktop
+taskbar_padding = 0 0 4
+taskbar_background_id = 0
+taskbar_active_background_id = 0
+taskbar_name = 0
+taskbar_distribute_size = 0
+
+#---- Tasks ----
+task_icon = 1
+task_text = 1
+task_centered = 0
+task_maximum_size = 220 26
+task_padding = 4 2 4
+task_font = Sans 9
+task_font_color = #DDDDDD 100
+task_active_font_color = #FFFFFF 100
+task_iconified_font_color = #999999 100
+task_background_id = 3
+task_active_background_id = 2
+task_iconified_background_id = 4
+mouse_left = toggle_iconify
+mouse_middle = none
+mouse_right = close
+mouse_scroll_up = toggle
+mouse_scroll_down = iconify
+
+#---- System tray ----
+systray_padding = 4 0 4
+systray_background_id = 0
+systray_sort = ascending
+systray_icon_size = 22
+systray_icon_asb = 100 0 0
+
+#---- Clock ----
+time1_format = %H:%M
+time1_font = Sans Bold 9
+time2_format = %a %d %b
+time2_font = Sans 7
+clock_font_color = #FFFFFF 100
+clock_padding = 6 0
+clock_background_id = 0
+clock_tooltip = %A %d %B %Y
+
+#---- Tooltips ----
+tooltip_show_timeout = 0.5
+tooltip_hide_timeout = 0.1
+tooltip_padding = 4 4
+tooltip_background_id = 1
+tooltip_font_color = #FFFFFF 100
+tooltip_font = Sans 9

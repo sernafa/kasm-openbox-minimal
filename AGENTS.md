@@ -30,7 +30,9 @@ Builds both `Dockerfile` and `Dockerfile.systemd` with `docker-bake.hcl`. Multi-
 - `docker-bake.hcl` — defines build targets and tags (e.g. `kasm-core-minimal:1.4.1`)
 - `src/common/install/kasm_vnc/kasmvnc.yaml` — KasmVNC server config (SSL cert path, UDP public_ip)
 - `src/ubuntu/systemd/kasmvnc.service` — systemd unit for the systemd variant
-- `src/ubuntu/defaults/openbox/autostart` — openbox autostart (launches stalonetray)
+- `src/ubuntu/defaults/openbox/autostart` — openbox autostart (launches tint2)
+- `src/ubuntu/defaults/tint2/tint2rc` — tint2 panel config (taskbar, systray, clock)
+- `src/ubuntu/defaults/xterm/Xresources` — X resources merged by openbox autostart (xterm font: DejaVu Sans Mono)
 - `src/ubuntu/defaults/openbox/menu.xml` — right-click desktop menu (needs `obamenu` package)
 
 ## Version bump workflow

@@ -36,22 +36,26 @@ if [[ "$DISTRO" = @(ubuntu|debian) ]]; then
   apt-get install -y --no-install-recommends \
     curl \
     dbus-x11 \
+    fonts-dejavu-core \
     openbox \
     x11-xserver-utils \
     xclip \
     xterm \
-    stalonetray
+    tint2
   echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+  echo "es_ES.UTF-8 UTF-8" >> /etc/locale.gen
   locale-gen
 elif [ "$DISTRO" = "alpine" ]; then
   apk add --no-cache \
     curl \
     dbus-x11 \
+    font-dejavu \
     gvfs \
     mesa \
     mesa-dri-gallium \
     mesa-gl \
     openbox \
+    tint2 \
     xterm
 fi
 
@@ -73,9 +77,4 @@ Name=Desktop Icon Trust
 Exec=/dockerstartup/trustdesktop.sh
 EOL
 chmod +x /etc/xdg/autostart/desktop-icons.desktop
-
-# OpenBox tweaks
-sed -i \
-  's/NLIMC/NLMC/g' \
-  /etc/xdg/openbox/rc.xml
 
