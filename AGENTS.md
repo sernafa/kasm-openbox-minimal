@@ -32,7 +32,7 @@ The image version (e.g. `1.0.0`) is the project's own versioning and is independ
 ## Key files
 
 - `docker-bake.hcl` — defines build targets and tags (e.g. `sernafa/kasm-openbox-minimal:1.0.0`)
-- `src/common/install/kasm_vnc/kasmvnc.yaml` — KasmVNC server config (SSL cert path, UDP public_ip)
+- `src/common/install/kasm_vnc/kasmvnc.yaml` — KasmVNC server config (SSL cert path, UDP public_ip, clipboard DLP tuned for xfce4-clipman: both directions enabled, X PRIMARY selection excluded to avoid flooding clipman's history with mere selections)
 - `src/ubuntu/systemd/kasmvnc.service` — systemd unit for the systemd variant
 - `src/ubuntu/defaults/openbox/autostart` — openbox autostart (merges `~/.Xresources`, launches tint2)
 - `src/ubuntu/defaults/tint2/tint2rc` — tint2 panel config (taskbar, systray, clock)

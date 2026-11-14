@@ -4,6 +4,13 @@ network:
     pem_key: ${HOME}/.vnc/self.pem
   udp:
     public_ip: 127.0.0.1
+data_loss_prevention:
+  clipboard:
+    server_to_client:
+      enabled: true
+      primary_clipboard_enabled: false
+    client_to_server:
+      enabled: true
 runtime_configuration:
   allow_override_standard_vnc_server_settings: true
   allow_override_list:
