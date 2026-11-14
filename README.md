@@ -83,6 +83,10 @@ Sep 23 09:12:01 7c50f0140db4 kasm_default_profile.sh[143]:  * Running on https:/
 Sep 23 09:12:01 7c50f0140db4 kasm_default_profile.sh[143]: Press CTRL+C to quit
 ```
 
+## License
+
+[MIT](LICENSE). The Kasm Technologies copyright notice is retained because parts of this code derive from their MIT-licensed [workspaces-core-images](https://github.com/kasmtech/workspaces-core-images). The license applies to the source in this repository only, not to the software installed in the image (Ubuntu packages, KasmVNC, etc.), which keeps its own licenses.
+
 # References
 
 - Fork of [yusiwen/kasm-core-minimal](https://github.com/yusiwen/kasm-core-minimal)
