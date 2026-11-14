@@ -3,8 +3,6 @@ ARG BASE_IMAGE="ubuntu:24.04"
 FROM $BASE_IMAGE AS base_layer
 
 ### Environment config
-ARG BG_IMG=bg_kasm.png
-ARG EXTRA_SH=noop.sh
 ARG DISTRO=ubuntu
 ARG LANG='en_US.UTF-8'
 ARG LANGUAGE='en_US:en'
@@ -113,11 +111,9 @@ LABEL "com.kasmweb.image"="true"
 
 ### Environment config
 ARG DISTRO=ubuntu
-ARG EXTRA_SH=noop.sh
 ARG LANG='en_US.UTF-8'
 ARG LANGUAGE='en_US:en'
 ARG LC_ALL='en_US.UTF-8'
-ARG START_XFCE4=1
 ARG TZ='Europe/Madrid'
 ENV DEBIAN_FRONTEND=noninteractive \
     DISPLAY=:1 \
@@ -142,7 +138,6 @@ ENV DEBIAN_FRONTEND=noninteractive \
     VNCOPTIONS="-PreferBandwidth -DynamicQualityMin=4 -DynamicQualityMax=7 -DLP_ClipDelay=0" \
     VNC_PORT=5901 \
     VNC_PW=vncpassword \
-    VNC_RESOLUTION=1280x1024 \
     VNC_RESOLUTION=1280x720 \
     VNC_VIEW_ONLY_PW=vncviewonlypassword \
     KASM_NO_VETH=0 \

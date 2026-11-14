@@ -8,7 +8,9 @@ Fork of [yusiwen/kasm-core-minimal](https://github.com/yusiwen/kasm-core-minimal
 docker buildx bake --load
 ```
 
-The `default` group builds only the `kasm-core-minimal` target (1.4.1, Ubuntu). Current releases are the `*-1_5_1` targets, e.g. `kasm-core-minimal-1_5_1`, `kasm-core-minimal-systemd-1_5_1`, `kasm-core-minimal_trixie-1_5_1`, `kasm-core-minimal_trixie-systemd-1_5_1`. Targets are multi-arch (`linux/amd64`, `linux/arm64`) and `--no-cache` is forced in bake config. `--load` cannot load multi-arch images, so for a local build add `--set '*.platform=linux/amd64'`.
+The `default` group builds only the `openbox-1_0_0` target (standard Ubuntu image). The `all` group builds every variant: `openbox-1_0_0`, `openbox-systemd-1_0_0`, `openbox-trixie-1_0_0`, `openbox-trixie-systemd-1_0_0`. Targets build for `linux/amd64` only and `--no-cache` is forced in bake config; `--load` loads the images into the local Docker store.
+
+The image version (e.g. `1.0.0`) is the project's own versioning and is independent of the bundled upstream component versions set via build args (KasmVNC `1.5.1`, profile-sync `release_2.1.1`).
 
 ## Variants
 
@@ -29,7 +31,7 @@ The `default` group builds only the `kasm-core-minimal` target (1.4.1, Ubuntu). 
 
 ## Key files
 
-- `docker-bake.hcl` — defines build targets and tags (e.g. `sernafa/kasm-openbox-minimal:1.5.1`)
+- `docker-bake.hcl` — defines build targets and tags (e.g. `sernafa/kasm-openbox-minimal:1.0.0`)
 - `src/common/install/kasm_vnc/kasmvnc.yaml` — KasmVNC server config (SSL cert path, UDP public_ip)
 - `src/ubuntu/systemd/kasmvnc.service` — systemd unit for the systemd variant
 - `src/ubuntu/defaults/openbox/autostart` — openbox autostart (merges `~/.Xresources`, launches tint2)
@@ -46,12 +48,21 @@ The `default` group builds only the `kasm-core-minimal` target (1.4.1, Ubuntu). 
 
 ## Version bump workflow
 
-To add a new version target, add a new `target` block in `docker-bake.hcl` (copy a `*-1_5_1` block) with `KASMVNC_COMMIT_ID`, `KASMVNC_BRANCH`, `KASMVNC_VER`, `PROFILE_SYNC_V2_COMMIT_ID`, `PROFILE_SYNC_V2_BRANCH` and corresponding tags. The Dockerfiles accept these as build args to control which KasmVNC and profile-sync builds are downloaded by `install_kasm_vnc.sh` and `install_profile_sync.sh`. The older `1.4.1` targets still pass the removed `COMMIT_ID`/`BRANCH` args and are likely broken.
+To add a new version target, add a new `target` block in `docker-bake.hcl` (copy an `openbox-1_0_0` block) with `KASMVNC_COMMIT_ID`, `KASMVNC_BRANCH`, `KASMVNC_VER`, `PROFILE_SYNC_V2_COMMIT_ID`, `PROFILE_SYNC_V2_BRANCH` and corresponding tags, and point the `default`/`all` groups at the new targets. Also update the target `options` list in `.github/workflows/manual-build.yml`. The Dockerfiles accept these as build args to control which KasmVNC and profile-sync builds are downloaded by `install_kasm_vnc.sh` and `install_profile_sync.sh`.
 
 ## Git
 
 `origin` is `sernafa/kasm-openbox-minimal`, `upstream` is the original `yusiwen/kasm-core-minimal`. The git credential helper in this environment points to a non-existent `/opt/homebrew/bin/gh`; push with `git -c credential.helper= -c credential.helper='!gh auth git-credential' push` or run `gh auth setup-git`.
 
-## No tests, no CI
+## CI
 
-This repo has no test suite, linter, or CI workflow. Changes are validated by building the image and running a container.
+Two GitHub Actions workflows publish images to GHCR as `ghcr.io/<owner>/<repo>`:
+
+- `release.yml` — on push of a `v*` tag; builds the `default` bake target and publishes it as `:<version>` (tag without the `v`).
+- `manual-build.yml` — `workflow_dispatch`; pick a bake target (`all` included) and a version tag. Variant suffixes (`-systemd`, `-trixie`, `-trixie-systemd`) are derived from the target name, so the four variants never collide on the same tag.
+
+Both workflows resolve targets from `docker buildx bake --print` and override tags with `--set`, so the `sernafa/...` tags in `docker-bake.hcl` are only used for local builds.
+
+## No tests
+
+This repo has no test suite or linter. Changes are validated by building the image and running a container.

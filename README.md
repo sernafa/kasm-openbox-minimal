@@ -12,22 +12,37 @@
 
 ## Build
 
-Use [docker bake](https://docs.docker.com/build/bake/) to build the multi-arch images:
+Use [docker bake](https://docs.docker.com/build/bake/) to build the images (single-arch, `linux/amd64`):
 
 ```bash
 docker buildx bake --load
 ```
 
-To load a single-arch image into the local Docker store:
+This builds the default target (`openbox-1_0_0`, standard Ubuntu image) and loads it into the local Docker store. A specific target can be built with:
 
 ```bash
-docker buildx bake --load --set '*.platform=linux/amd64' kasm-core-minimal-1_5_1
+docker buildx bake --load openbox-systemd-1_0_0
 ```
+
+Build and load every variant (standard, systemd, trixie, trixie-systemd) with:
+
+```bash
+docker buildx bake --load all
+```
+
+## Publishing
+
+Images are published to the GitHub Container Registry (GHCR) by two GitHub Actions workflows:
+
+- **Release** (`.github/workflows/release.yml`) — automatic. Pushing a `v*` tag (e.g. `v1.0.0`) builds the default bake target and publishes `ghcr.io/<owner>/<repo>:<version>` (tag without the `v`).
+- **Manual build** (`.github/workflows/manual-build.yml`) — manual `workflow_dispatch`. Pick a bake target (any of the four variants or `all`) and a version tag to publish.
+
+Variant suffixes (`-systemd`, `-trixie`, `-trixie-systemd`) are appended automatically based on the chosen target, so each variant gets its own tag.
 
 ## Usage
 
 ```bash
-docker run --rm -p 6901:6901 -e VNC_PW=password sernafa/kasm-openbox-minimal:1.5.1
+docker run --rm -p 6901:6901 -e VNC_PW=password ghcr.io/sernafa/kasm-openbox-minimal:1.0.0
 ```
 
 Access [https://localhost:6901](https://localhost:6901) in web browser.
@@ -37,7 +52,7 @@ The default usename is `kasm_user`, password is set by `$VNC_PW`
 If the container is planned to use network other than bridge, such as macvlan, it must be started as:
 
 ```bash
-docker run --rm -p 6901:6901 -e VNC_PW=password -e KASM_NO_VETH=1 sernafa/kasm-openbox-minimal:1.5.1
+docker run --rm -p 6901:6901 -e VNC_PW=password -e KASM_NO_VETH=1 ghcr.io/sernafa/kasm-openbox-minimal:1.0.0
 ```
 
 The desktop environemnt is OpenBox, use mouse right button to call out the system menu.
@@ -46,10 +61,10 @@ The desktop environemnt is OpenBox, use mouse right button to call out the syste
 
 ### systemd Compatible Image
 
-`sernafa/kasm-openbox-minimal:1.5.1-systemd` uses systemd as init process in container.
+`ghcr.io/sernafa/kasm-openbox-minimal:1.0.0-systemd` uses systemd as init process in container.
 
 ```bash
-$ docker run --rm -d --name kasm-openbox-minimal -e VNC_PW=password -p 6901:6901 --shm-size=512m --privileged -v=/sys/fs/cgroup:/sys/fs/cgroup:rw --ulimit nofile=1048576:1048576 --cgroupns=host --user=root sernafa/kasm-openbox-minimal:1.5.1-systemd
+$ docker run --rm -d --name kasm-openbox-minimal -e VNC_PW=password -p 6901:6901 --shm-size=512m --privileged -v=/sys/fs/cgroup:/sys/fs/cgroup:rw --ulimit nofile=1048576:1048576 --cgroupns=host --user=root ghcr.io/sernafa/kasm-openbox-minimal:1.0.0-systemd
 
 $ docker exec kasm-openbox-minimal systemctl status kasmvnc
 ● kasmvnc.service - KasmVNC Service
