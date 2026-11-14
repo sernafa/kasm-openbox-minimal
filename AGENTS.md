@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Fork of [yusiwen/kasm-core-minimal](https://github.com/yusiwen/kasm-core-minimal) (itself based on Kasm's `workspaces-core-images`). Image: `sernafa/kasm-ubuntu-openbox-minimal`. License: MIT (`LICENSE`, keeps Kasm's copyright notice).
+Fork of [yusiwen/kasm-core-minimal](https://github.com/yusiwen/kasm-core-minimal) (itself based on Kasm's `workspaces-core-images`). Image: `sernafa/kasm-openbox-minimal`. License: MIT (`LICENSE`, keeps Kasm's copyright notice).
 
 ## Build
 
@@ -29,7 +29,7 @@ The `default` group builds only the `kasm-core-minimal` target (1.4.1, Ubuntu). 
 
 ## Key files
 
-- `docker-bake.hcl` — defines build targets and tags (e.g. `sernafa/kasm-ubuntu-openbox-minimal:1.5.1`)
+- `docker-bake.hcl` — defines build targets and tags (e.g. `sernafa/kasm-openbox-minimal:1.5.1`)
 - `src/common/install/kasm_vnc/kasmvnc.yaml` — KasmVNC server config (SSL cert path, UDP public_ip)
 - `src/ubuntu/systemd/kasmvnc.service` — systemd unit for the systemd variant
 - `src/ubuntu/defaults/openbox/autostart` — openbox autostart (merges `~/.Xresources`, launches tint2)
@@ -50,7 +50,7 @@ To add a new version target, add a new `target` block in `docker-bake.hcl` (copy
 
 ## Git
 
-`origin` is `sernafa/kasm-ubuntu-openbox-minimal`, `upstream` is the original `yusiwen/kasm-core-minimal`. The git credential helper in this environment points to a non-existent `/opt/homebrew/bin/gh`; push with `git -c credential.helper= -c credential.helper='!gh auth git-credential' push` or run `gh auth setup-git`.
+`origin` is `sernafa/kasm-openbox-minimal`, `upstream` is the original `yusiwen/kasm-core-minimal`. The git credential helper in this environment points to a non-existent `/opt/homebrew/bin/gh`; push with `git -c credential.helper= -c credential.helper='!gh auth git-credential' push` or run `gh auth setup-git`.
 
 ## No tests, no CI
 

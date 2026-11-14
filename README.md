@@ -27,7 +27,7 @@ docker buildx bake --load --set '*.platform=linux/amd64' kasm-core-minimal-1_5_1
 ## Usage
 
 ```bash
-docker run --rm -p 6901:6901 -e VNC_PW=password sernafa/kasm-ubuntu-openbox-minimal:1.5.1
+docker run --rm -p 6901:6901 -e VNC_PW=password sernafa/kasm-openbox-minimal:1.5.1
 ```
 
 Access [https://localhost:6901](https://localhost:6901) in web browser.
@@ -37,7 +37,7 @@ The default usename is `kasm_user`, password is set by `$VNC_PW`
 If the container is planned to use network other than bridge, such as macvlan, it must be started as:
 
 ```bash
-docker run --rm -p 6901:6901 -e VNC_PW=password -e KASM_NO_VETH=1 sernafa/kasm-ubuntu-openbox-minimal:1.5.1
+docker run --rm -p 6901:6901 -e VNC_PW=password -e KASM_NO_VETH=1 sernafa/kasm-openbox-minimal:1.5.1
 ```
 
 The desktop environemnt is OpenBox, use mouse right button to call out the system menu.
@@ -46,12 +46,12 @@ The desktop environemnt is OpenBox, use mouse right button to call out the syste
 
 ### systemd Compatible Image
 
-`sernafa/kasm-ubuntu-openbox-minimal:1.5.1-systemd` uses systemd as init process in container.
+`sernafa/kasm-openbox-minimal:1.5.1-systemd` uses systemd as init process in container.
 
 ```bash
-$ docker run --rm -d --name kasm-ubuntu-openbox-minimal -e VNC_PW=password -p 6901:6901 --shm-size=512m --privileged -v=/sys/fs/cgroup:/sys/fs/cgroup:rw --ulimit nofile=1048576:1048576 --cgroupns=host --user=root sernafa/kasm-ubuntu-openbox-minimal:1.5.1-systemd
+$ docker run --rm -d --name kasm-openbox-minimal -e VNC_PW=password -p 6901:6901 --shm-size=512m --privileged -v=/sys/fs/cgroup:/sys/fs/cgroup:rw --ulimit nofile=1048576:1048576 --cgroupns=host --user=root sernafa/kasm-openbox-minimal:1.5.1-systemd
 
-$ docker exec kasm-ubuntu-openbox-minimal systemctl status kasmvnc
+$ docker exec kasm-openbox-minimal systemctl status kasmvnc
 ● kasmvnc.service - KasmVNC Service
      Loaded: loaded (/usr/lib/systemd/system/kasmvnc.service; enabled; preset: enabled)
      Active: active (running) since Tue 2025-09-23 09:11:52 UTC; 28s ago
