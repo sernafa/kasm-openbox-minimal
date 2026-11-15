@@ -38,6 +38,8 @@ if [[ "$DISTRO" = @(ubuntu|debian) ]]; then
     dbus-x11 \
     fonts-dejavu-core \
     fonts-noto-core \
+    gir1.2-keybinder-3.0 \
+    gir1.2-notify-0.7 \
     openbox \
     terminator \
     x11-xserver-utils \
@@ -56,6 +58,18 @@ if [[ "$DISTRO" = @(ubuntu|debian) ]]; then
 
   # Put xfconfd on PATH so the session autostart can launch it for xfce4-clipman
   ln -sf /usr/lib/*/xfce4/xfconf/xfconfd /usr/local/bin/xfconfd
+
+  # terminator system-wide config: without the file terminator logs a
+  # read error on startup; the profile keeps the Noto system font
+  mkdir -p /etc/xdg/terminator
+  cat >/etc/xdg/terminator/config <<EOL
+[global_config]
+[keybindings]
+[profiles]
+  [[default]]
+    use_system_font = False
+    font = Noto Mono 10
+EOL
 
   # Prefer Noto for generic font families (system default font).
   # Must load BEFORE Debian's 60-latin.conf: fontconfig honors the first

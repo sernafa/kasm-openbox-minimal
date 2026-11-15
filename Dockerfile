@@ -69,6 +69,10 @@ RUN bash $STARTUPDIR/set_user_permission.sh $STARTUPDIR $HOME && \
     echo 'source $STARTUPDIR/generate_container_user' >> $HOME/.zshrc && \
     echo 'export PS1="$USERNAME:%~\$ "' >> $HOME/.zshrc
 
+# keep the shipped profile user-owned: kasm_default_profile.sh copies it
+# with cp -rp, which preserves ownership
+RUN chown -R 1000:0 /home/kasm-default-profile
+
 ### Create user and home directory for base images that don't already define it
 RUN (groupadd -g 1000 kasm-user \
     && useradd -M -u 1000 -g 1000 -s /usr/bin/zsh kasm-user \
@@ -122,6 +126,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     DISTRO=$DISTRO \
     GOMP_SPINCOUNT=0 \
     HOME=/home/kasm-user \
+    XDG_CONFIG_HOME=/home/kasm-user/.config \
     INST_SCRIPTS=/dockerstartup/install \
     KASMVNC_AUTO_RECOVER=true \
     KASM_VNC_PATH=/usr/share/kasmvnc \
@@ -157,6 +162,13 @@ COPY ./src/ubuntu/defaults/openbox/autostart .config/openbox/
 COPY ./src/ubuntu/defaults/openbox/menu.xml .config/openbox/
 COPY ./src/ubuntu/defaults/tint2/tint2rc .config/tint2/
 COPY ./src/ubuntu/defaults/xterm/Xresources .Xresources
+
+# COPY does not inherit USER: the shipped dotfiles are root-owned and the
+# session (xfconfd, clipman settings, terminator...) must be able to write
+# under $HOME
+USER root
+RUN chown -R 1000:0 $HOME
+USER 1000
 
 ENTRYPOINT ["/dockerstartup/kasm_default_profile.sh", "/dockerstartup/vnc_startup.sh", "/dockerstartup/kasm_startup.sh"]
 CMD ["--wait"]
