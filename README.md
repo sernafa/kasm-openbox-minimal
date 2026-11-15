@@ -5,6 +5,7 @@
 - minimal image size, approximate only 900MB
 - openbox window manager with a tint2 panel (taskbar, system tray, clock)
 - rofi launcher: `W-w` window switcher, `W-s` SSH, `C-space` run dialog
+- feh image viewer and pcmanfm file manager
 - terminator installed and set as the default terminal (`x-terminal-emulator`)
 - elementary-xfce icon theme so systray icons are visible on the dark panel
 - xfce4-clipman clipboard manager, autostarted with the session

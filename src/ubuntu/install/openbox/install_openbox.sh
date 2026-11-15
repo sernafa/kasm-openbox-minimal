@@ -37,12 +37,14 @@ if [[ "$DISTRO" = @(ubuntu|debian) ]]; then
     curl \
     dbus-x11 \
     elementary-xfce-icon-theme \
+    feh \
     fonts-dejavu-core \
     fonts-noto-core \
     gir1.2-keybinder-3.0 \
     gir1.2-notify-0.7 \
     hicolor-icon-theme \
     openbox \
+    pcmanfm \
     rofi \
     terminator \
     x11-xserver-utils \
