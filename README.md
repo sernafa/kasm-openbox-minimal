@@ -10,6 +10,7 @@
 - system font is Noto (`fonts-noto-core`); xterm uses Noto Mono
 - python3.12 included
 - vim, iproute2, etc. tools are included
+- zsh installed and set as the default shell for `kasm_user`
 - no audio, printer, webcam, nvidia, web-browser, mail, etc. keeping everything simple
 
 ## Build

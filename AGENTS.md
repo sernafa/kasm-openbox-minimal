@@ -46,7 +46,7 @@ The image version (e.g. `1.0.0`) is the project's own versioning and is independ
 - terminator is installed and registered as the default `x-terminal-emulator` alternative (`update-alternatives --set` in `install_openbox.sh`), so the Openbox root menu's Terminal entry launches it. xterm remains installed and uses Noto Mono via `~/.Xresources`.
 - xfce4-clipman is installed and autostarted with the session (line in `src/ubuntu/defaults/openbox/autostart`); its icon lives in the tint2 systray.
 - System font is Noto (`fonts-noto-core`): fontconfig prefers Noto Sans/Serif/Mono for the generic families via `/etc/fonts/conf.d/59-noto-defaults.conf` (written by `install_openbox.sh`; numbered to load before Debian's `60-latin.conf`, which otherwise wins with DejaVu Sans Mono for monospace). tint2 and xterm use Noto explicitly; xterm size 10 via `~/.Xresources`. `fonts-dejavu-core` stays installed as fallback.
-- `kasm-user` login shell is `/bin/bash` (set via `useradd -s /bin/bash`; without it the passwd entry defaulted to `/bin/sh`, so xterm spawned sh and `.bashrc` was never sourced).
+- `zsh` is installed (`install_tools.sh`) and is the login shell of `kasm-user` (`useradd -s /usr/bin/zsh`); without an explicit shell the passwd entry defaulted to `/bin/sh`. The default profile ships a `.zshrc` that sources `generate_container_user` and re-exports `PS1` with zsh escapes (`%~`), since bash's `\w` never expands in zsh. `.bashrc` is still provisioned for when bash is used explicitly.
 - The default profile in `/home/kasm-default-profile` is copied to `$HOME` only if `.bashrc` is missing; a persisted `$HOME` keeps old dotfiles and will not pick up changes to `autostart`, `tint2rc` or `.Xresources`.
 
 ## Version bump workflow

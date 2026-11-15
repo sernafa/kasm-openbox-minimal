@@ -30,9 +30,9 @@ else
 
   # software-properties is removed from kali-rolling and debian trixie
   if grep -q "kali-rolling" /etc/os-release || grep -q "trixie" /etc/os-release || grep -qi "parrot" /etc/os-release; then
-    apt-get install -y sudo iproute2 iptables vim wget net-tools locales bzip2 wmctrl mesa-utils bc vulkan-tools
+    apt-get install -y sudo iproute2 iptables vim wget net-tools locales bzip2 wmctrl mesa-utils bc vulkan-tools zsh
   else
-    apt-get install -y sudo iproute2 iptables vim wget net-tools locales bzip2 wmctrl software-properties-common mesa-utils bc vulkan-tools
+    apt-get install -y sudo iproute2 iptables vim wget net-tools locales bzip2 wmctrl software-properties-common mesa-utils bc vulkan-tools zsh
   fi
 
   echo "generate locales for en_US.UTF-8 and es_ES.UTF-8"
