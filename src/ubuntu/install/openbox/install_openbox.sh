@@ -43,6 +43,7 @@ if [[ "$DISTRO" = @(ubuntu|debian) ]]; then
     gir1.2-notify-0.7 \
     hicolor-icon-theme \
     openbox \
+    rofi \
     terminator \
     x11-xserver-utils \
     xclip \

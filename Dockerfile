@@ -160,6 +160,7 @@ USER 1000
 
 COPY ./src/ubuntu/defaults/openbox/autostart .config/openbox/
 COPY ./src/ubuntu/defaults/openbox/menu.xml .config/openbox/
+COPY ./src/ubuntu/defaults/openbox/rc.xml .config/openbox/
 COPY ./src/ubuntu/defaults/tint2/tint2rc .config/tint2/
 COPY ./src/ubuntu/defaults/xterm/Xresources .Xresources
 

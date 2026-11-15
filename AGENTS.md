@@ -35,14 +35,16 @@ The image version (e.g. `1.0.0`) is the project's own versioning and is independ
 - `src/common/install/kasm_vnc/kasmvnc.yaml` — KasmVNC server config (SSL cert path, UDP public_ip, clipboard DLP tuned for xfce4-clipman: both directions enabled, X PRIMARY selection excluded to avoid flooding clipman's history with mere selections)
 - `src/ubuntu/systemd/kasmvnc.service` — systemd unit for the systemd variant
 - `src/ubuntu/defaults/openbox/autostart` — openbox autostart (merges `~/.Xresources`, launches tint2, xfconfd and xfce4-clipman)
-- `src/ubuntu/defaults/tint2/tint2rc` — tint2 panel config (taskbar, systray, clock)
+- `src/ubuntu/defaults/openbox/rc.xml` — shipped openbox config: stock Debian `rc.xml` plus rofi keybindings (`W-w` window switcher, `W-s` SSH, `C-space` run dialog, all with the bundled `Arc-Dark` theme)
+- `src/ubuntu/defaults/tint2/tint2rc` — tint2 config from the `kasm-core-minimal` theme: dark panel (`#1d1f21`) at the top with tasks/systray/clock (`LTSC`)
 - `src/ubuntu/defaults/xterm/Xresources` — X resources merged by openbox autostart (xterm font: Noto Mono)
 - `src/ubuntu/defaults/openbox/menu.xml` — right-click desktop menu (needs `obamenu` package)
 
 ## Defaults
 
 - Timezone `Europe/Madrid` (`ARG TZ`, override at runtime with `-e TZ=`). Language stays `en_US.UTF-8`; `es_ES.UTF-8` is generated and selectable with `-e LC_ALL=es_ES.UTF-8` (standard image only, see systemd note above).
-- Desktop: Openbox + tint2 (`panel_items = TSC`); default Openbox window buttons, including minimize.
+- Desktop: Openbox + tint2 (`panel_items = LTSC`, top panel, dark theme from `kasm-core-minimal`); default Openbox window buttons, including minimize.
+- rofi installed and bound to `W-w` (window switcher), `W-s` (SSH) and `C-space` (run dialog), using the bundled `Arc-Dark` theme.
 - terminator is installed and registered as the default `x-terminal-emulator` alternative (`update-alternatives --set` in `install_openbox.sh`), so the Openbox root menu's Terminal entry launches it. A system config is written to `/etc/xdg/terminator/config` (Noto Mono profile; without the file terminator logs a read error on startup) and `gir1.2-keybinder-3.0`/`gir1.2-notify-0.7` are installed explicitly (Recommends that `--no-install-recommends` would skip; without them the `hide_window` shortcut and notification plugins are unavailable). xterm remains installed and uses Noto Mono via `~/.Xresources`.
 - `elementary-xfce-icon-theme` + `hicolor-icon-theme` provide systray/app icons (e.g. xfce4-clipman); without a theme GTK falls back to a dark glyph invisible on the dark tint2 panel. `/etc/gtk-3.0/settings.ini` selects the theme — there is no XSettings manager, so GTK reads that file directly.
 - xfce4-clipman is installed and autostarted with the session (line in `src/ubuntu/defaults/openbox/autostart`); its icon lives in the tint2 systray. The autostart launches `xfconfd` (symlinked onto PATH by `install_openbox.sh`) before it: without the daemon, clipman spams GLib CRITICAL logs and cannot persist its settings.
