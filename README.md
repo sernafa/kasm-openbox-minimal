@@ -12,7 +12,7 @@
 - default timezone `Europe/Madrid` (override with `-e TZ=...`); `es_ES.UTF-8` locale available (`-e LC_ALL=es_ES.UTF-8`)
 - system font is Noto (`fonts-noto-core`); xterm uses Noto Mono
 - python3.12 included
-- vim, net-tools, ssh client, dnsutils (dig/nslookup), git and mc included
+- vim, net-tools, ssh client, dnsutils (dig/nslookup), netcat, git and mc included
 - zsh installed and set as the default shell for `kasm_user`
 - no audio, printer, webcam, nvidia, web-browser, mail, etc. keeping everything simple
 
