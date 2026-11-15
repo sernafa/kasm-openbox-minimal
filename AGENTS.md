@@ -36,7 +36,7 @@ The image version (e.g. `1.0.0`) is the project's own versioning and is independ
 - `src/ubuntu/systemd/kasmvnc.service` — systemd unit for the systemd variant
 - `src/ubuntu/defaults/openbox/autostart` — openbox autostart (merges `~/.Xresources`, launches tint2, xfconfd and xfce4-clipman)
 - `src/ubuntu/defaults/tint2/tint2rc` — tint2 panel config (taskbar, systray, clock)
-- `src/ubuntu/defaults/xterm/Xresources` — X resources merged by openbox autostart (xterm font: DejaVu Sans Mono)
+- `src/ubuntu/defaults/xterm/Xresources` — X resources merged by openbox autostart (xterm font: Noto Mono)
 - `src/ubuntu/defaults/openbox/menu.xml` — right-click desktop menu (needs `obamenu` package)
 
 ## Defaults
