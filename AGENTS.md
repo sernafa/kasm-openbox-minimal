@@ -34,7 +34,7 @@ The image version (e.g. `1.0.0`) is the project's own versioning and is independ
 - `docker-bake.hcl` — defines build targets and tags (e.g. `sernafa/kasm-openbox-minimal:1.0.0`)
 - `src/common/install/kasm_vnc/kasmvnc.yaml` — KasmVNC server config (SSL cert path, UDP public_ip, clipboard DLP tuned for xfce4-clipman: both directions enabled, X PRIMARY selection excluded to avoid flooding clipman's history with mere selections)
 - `src/ubuntu/systemd/kasmvnc.service` — systemd unit for the systemd variant
-- `src/ubuntu/defaults/openbox/autostart` — openbox autostart (merges `~/.Xresources`, launches tint2)
+- `src/ubuntu/defaults/openbox/autostart` — openbox autostart (merges `~/.Xresources`, launches tint2, xfconfd and xfce4-clipman)
 - `src/ubuntu/defaults/tint2/tint2rc` — tint2 panel config (taskbar, systray, clock)
 - `src/ubuntu/defaults/xterm/Xresources` — X resources merged by openbox autostart (xterm font: DejaVu Sans Mono)
 - `src/ubuntu/defaults/openbox/menu.xml` — right-click desktop menu (needs `obamenu` package)
@@ -44,7 +44,7 @@ The image version (e.g. `1.0.0`) is the project's own versioning and is independ
 - Timezone `Europe/Madrid` (`ARG TZ`, override at runtime with `-e TZ=`). Language stays `en_US.UTF-8`; `es_ES.UTF-8` is generated and selectable with `-e LC_ALL=es_ES.UTF-8` (standard image only, see systemd note above).
 - Desktop: Openbox + tint2 (`panel_items = TSC`); default Openbox window buttons, including minimize.
 - terminator is installed and registered as the default `x-terminal-emulator` alternative (`update-alternatives --set` in `install_openbox.sh`), so the Openbox root menu's Terminal entry launches it. xterm remains installed and uses Noto Mono via `~/.Xresources`.
-- xfce4-clipman is installed and autostarted with the session (line in `src/ubuntu/defaults/openbox/autostart`); its icon lives in the tint2 systray.
+- xfce4-clipman is installed and autostarted with the session (line in `src/ubuntu/defaults/openbox/autostart`); its icon lives in the tint2 systray. The autostart launches `xfconfd` (symlinked onto PATH by `install_openbox.sh`) before it: without the daemon, clipman spams GLib CRITICAL logs and cannot persist its settings.
 - System font is Noto (`fonts-noto-core`): fontconfig prefers Noto Sans/Serif/Mono for the generic families via `/etc/fonts/conf.d/59-noto-defaults.conf` (written by `install_openbox.sh`; numbered to load before Debian's `60-latin.conf`, which otherwise wins with DejaVu Sans Mono for monospace). tint2 and xterm use Noto explicitly; xterm size 10 via `~/.Xresources`. `fonts-dejavu-core` stays installed as fallback.
 - `zsh` is installed (`install_tools.sh`) and is the login shell of `kasm-user` (`useradd -s /usr/bin/zsh`); without an explicit shell the passwd entry defaulted to `/bin/sh`. The default profile ships a `.zshrc` that sources `generate_container_user` and re-exports `PS1` with zsh escapes (`%~`), since bash's `\w` never expands in zsh. `.bashrc` is still provisioned for when bash is used explicitly.
 - The default profile in `/home/kasm-default-profile` is copied to `$HOME` only if `.bashrc` is missing; a persisted `$HOME` keeps old dotfiles and will not pick up changes to `autostart`, `tint2rc` or `.Xresources`.

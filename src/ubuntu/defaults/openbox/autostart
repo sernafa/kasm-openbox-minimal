@@ -1,3 +1,5 @@
 [ -f "$HOME/.Xresources" ] && xrdb -merge "$HOME/.Xresources"
 tint2 &
+xfconfd &
+sleep 1
 xfce4-clipman &

@@ -8,8 +8,6 @@
   <item label="Terminal emulator">
     <action name="Execute"><execute>x-terminal-emulator</execute></action>
   </item>
-  <!-- This requires the presence of the 'obamenu' package to work -->
-  <menu id="/Debian" />
   <separator />
   <menu id="applications-menu" label="Applications" execute="/usr/bin/obamenu"/>
   <separator />

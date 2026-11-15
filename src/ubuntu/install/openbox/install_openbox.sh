@@ -44,6 +44,7 @@ if [[ "$DISTRO" = @(ubuntu|debian) ]]; then
     xclip \
     xterm \
     xfce4-clipman \
+    xfconf \
     tint2
   echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
   echo "es_ES.UTF-8 UTF-8" >> /etc/locale.gen
@@ -52,6 +53,9 @@ if [[ "$DISTRO" = @(ubuntu|debian) ]]; then
   # Make terminator the default terminal emulator; the Openbox root menu's
   # "Terminal emulator" entry executes x-terminal-emulator
   update-alternatives --set x-terminal-emulator /usr/bin/terminator
+
+  # Put xfconfd on PATH so the session autostart can launch it for xfce4-clipman
+  ln -sf /usr/lib/*/xfce4/xfconf/xfconfd /usr/local/bin/xfconfd
 
   # Prefer Noto for generic font families (system default font).
   # Must load BEFORE Debian's 60-latin.conf: fontconfig honors the first
