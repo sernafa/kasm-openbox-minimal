@@ -1,20 +1,64 @@
+# kasm-openbox-minimal
+
 > **Note:** this project is a fork of [yusiwen/kasm-core-minimal](https://github.com/yusiwen/kasm-core-minimal) and is based on its code, which in turn builds on Kasm Technologies' [workspaces-core-images](https://github.com/kasmtech/workspaces-core-images). All credit for the original work goes to their authors.
+
+A minimal KasmVNC Docker image with a full-featured Openbox desktop: web browser access, clipboard manager, application launcher, terminal and file manager — in a ~900 MB image with no audio, printer, webcam or browser bloat.
+
+<img src="screenshot.png" alt="kasm-openbox-minimal desktop" width="1000">
 
 ## Features
 
-- minimal image size, approximate only 900MB
-- openbox window manager with a tint2 panel (taskbar, system tray, clock)
-- rofi launcher: `W-w` window switcher, `W-s` SSH, `C-space` run dialog
-- feh image viewer and pcmanfm file manager
-- terminator installed and set as the default terminal (`x-terminal-emulator`)
-- elementary-xfce icon theme so systray icons are visible on the dark panel
-- xfce4-clipman clipboard manager, autostarted with the session
-- default timezone `Europe/Madrid` (override with `-e TZ=...`); `es_ES.UTF-8` locale available (`-e LC_ALL=es_ES.UTF-8`)
-- system font is Noto (`fonts-noto-core`); xterm uses Noto Mono
-- python3.12 included
-- vim, net-tools, ssh client, dnsutils (dig/nslookup), netcat, git and mc included
-- zsh installed and set as the default shell for `kasm_user`
-- no audio, printer, webcam, nvidia, web-browser, mail, etc. keeping everything simple
+### Desktop
+
+- **Openbox** window manager with a dark **tint2** panel at the top (taskbar, system tray and clock)
+- **rofi** launcher using its bundled Arc-Dark theme:
+  - `W-w` — window switcher
+  - `W-s` — SSH connections
+  - `C-space` — run dialog
+- **terminator** as the default terminal (`x-terminal-emulator`), with Noto Mono 10; `xterm` kept as a lightweight fallback
+- **pcmanfm** file manager and **feh** image viewer
+- **xfce4-clipman** clipboard manager, autostarted with the session and integrated with the KasmVNC clipboard
+- **elementary-xfce** icon theme so systray icons are visible on the dark panel
+- Right-click on the desktop opens the Openbox root menu; applications are also available through obamenu
+
+### Fonts and shell
+
+- **Noto** as the system font: fontconfig prefers Noto Sans / Serif / Mono for the generic families, and terminals use Noto Mono
+- **zsh** installed and set as the default shell for `kasm_user` (bash is still available)
+- Window titlebars use Noto Sans bold 10 to match the terminal titlebars
+
+### Included software
+
+- KasmVNC server, Python 3.12, D-Bus session
+- CLI tools: `vim`, `git`, `mc`, `net-tools`, `iproute2`, `iptables`, `openssh-client`, `dnsutils` (dig/nslookup), `netcat-openbsd`, `bc`, `bzip2`, `wmctrl`, `mesa-utils`, `vulkan-tools`
+- Fonts: Noto core and DejaVu core
+- What is deliberately **not** included: audio, printer, webcam, NVIDIA, web browser, mail and similar bloat — keeping the image simple and small
+
+## Ports
+
+| Port | Purpose |
+|------|---------|
+| 6901 | KasmVNC web client (HTTPS by default) |
+| 5901 | Native VNC |
+| 4902 | Upload server (HTTPS, serves `~/Uploads`) |
+
+## Environment variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `VNC_PW` | `vncpassword` | Password of the `kasm_user` user |
+| `VNC_VIEW_ONLY_PW` | `vncviewonlypassword` | Password of the read-only `kasm_viewer` user |
+| `TZ` | `Europe/Madrid` | Timezone |
+| `LC_ALL` | `en_US.UTF-8` | Locale; `es_ES.UTF-8` is also generated and selectable |
+| `VNC_RESOLUTION` | `1280x720` | Initial desktop resolution |
+| `MAX_FRAME_RATE` | `24` | KasmVNC frame rate |
+| `KASM_VNC_SSL` | `1` | Set to `0` to disable SSL on the web/VNC ports |
+| `KASM_NO_AUTH` | `1`... unset | Set to `1` to disable basic authentication |
+| `KASMVNC_AUTO_RECOVER` | `true` | Restart KasmVNC automatically if it crashes |
+| `KASM_NO_VETH` | `0` | Set to `1` when using networks other than bridge (e.g. macvlan) |
+| `KASM_SVC_UPLOADS` | `1` | Set to `0` to disable the upload server |
+
+A `/dockerstartup/custom_startup.sh` script is executed after the session if you mount one into the container (it must be executable).
 
 ## Build
 
@@ -42,6 +86,55 @@ Target names are stable across versions. The image name and version come from th
 IMAGE=sernafa/kasm-openbox-minimal VERSION=1.1.0 docker buildx bake --load openbox
 ```
 
+## Usage
+
+```bash
+docker run --rm -p 6901:6901 -e VNC_PW=password ghcr.io/sernafa/kasm-openbox-minimal:1.0.0
+```
+
+Access [https://localhost:6901](https://localhost:6901) in a web browser.
+
+The default username is `kasm_user`; the password is set by `$VNC_PW`.
+
+If the container will use a network other than bridge, such as macvlan, it must be started with:
+
+```bash
+docker run --rm -p 6901:6901 -e VNC_PW=password -e KASM_NO_VETH=1 ghcr.io/sernafa/kasm-openbox-minimal:1.0.0
+```
+
+Keyboard shortcuts of the desktop:
+
+| Keys | Action |
+|------|--------|
+| `C-space` | rofi run dialog |
+| `W-w` | rofi window switcher |
+| `W-s` | rofi SSH connections |
+| Right click | Openbox root menu |
+
+Uploaded files land in `~/Uploads` and are reachable from the browser through the upload server; downloads are served from `~/Downloads`.
+
+### systemd compatible image
+
+`ghcr.io/sernafa/kasm-openbox-minimal:1.0.0-systemd` runs systemd as the init process, so services inside the container can be managed with `systemctl`. It requires privileged mode and a shared cgroup:
+
+```bash
+docker run --rm -d --name kasm-openbox-minimal \
+  -e VNC_PW=password -p 6901:6901 \
+  --shm-size=512m --privileged \
+  -v=/sys/fs/cgroup:/sys/fs/cgroup:rw \
+  --ulimit nofile=1048576:1048576 \
+  --cgroupns=host --user=root \
+  ghcr.io/sernafa/kasm-openbox-minimal:1.0.0-systemd
+```
+
+Then:
+
+```bash
+docker exec kasm-openbox-minimal systemctl status kasmvnc
+```
+
+Note that only the variables listed in `PassEnvironment` of the `kasmvnc.service` unit reach the session (e.g. `TZ` does, `LC_ALL` does not), and `kasm-user` has no sudo in this variant.
+
 ## Publishing
 
 Images are published to the GitHub Container Registry (GHCR) by two GitHub Actions workflows:
@@ -51,70 +144,11 @@ Images are published to the GitHub Container Registry (GHCR) by two GitHub Actio
 
 Both workflows set the bake file's `IMAGE`/`VERSION` variables, so each variant is published with the suffix defined in `docker-bake.hcl` (`-systemd`, `-trixie`, `-trixie-systemd`) and they never collide.
 
-## Usage
-
-```bash
-docker run --rm -p 6901:6901 -e VNC_PW=password ghcr.io/sernafa/kasm-openbox-minimal:1.0.0
-```
-
-Access [https://localhost:6901](https://localhost:6901) in web browser.
-
-The default usename is `kasm_user`, password is set by `$VNC_PW`
-
-If the container is planned to use network other than bridge, such as macvlan, it must be started as:
-
-```bash
-docker run --rm -p 6901:6901 -e VNC_PW=password -e KASM_NO_VETH=1 ghcr.io/sernafa/kasm-openbox-minimal:1.0.0
-```
-
-The desktop environemnt is OpenBox, use mouse right button to call out the system menu.
-
-![alt text](screenshot.png)
-
-### systemd Compatible Image
-
-`ghcr.io/sernafa/kasm-openbox-minimal:1.0.0-systemd` uses systemd as init process in container.
-
-```bash
-$ docker run --rm -d --name kasm-openbox-minimal -e VNC_PW=password -p 6901:6901 --shm-size=512m --privileged -v=/sys/fs/cgroup:/sys/fs/cgroup:rw --ulimit nofile=1048576:1048576 --cgroupns=host --user=root ghcr.io/sernafa/kasm-openbox-minimal:1.0.0-systemd
-
-$ docker exec kasm-openbox-minimal systemctl status kasmvnc
-● kasmvnc.service - KasmVNC Service
-     Loaded: loaded (/usr/lib/systemd/system/kasmvnc.service; enabled; preset: enabled)
-     Active: active (running) since Tue 2025-09-23 09:11:52 UTC; 28s ago
-   Main PID: 33 (vnc_startup.sh)
-      Tasks: 13 (limit: 2857)
-     Memory: 171.8M ()
-        CPU: 3.442s
-     CGroup: /system.slice/docker-7c50f0140db44fd09b22f29a13d738addd4a18fc5987c56768b18d9b52d37983.scope/system.slice/kasmvnc.service
-             ├─ 33 /bin/bash /dockerstartup/vnc_startup.sh /dockerstartup/kasm_startup.sh
-             ├─ 51 /usr/bin/dbus-daemon --syslog --fork --print-pid 4 --print-address 6 --session
-             ├─106 /usr/bin/Xvnc :1 -drinode /dev/dri/renderD128 -depth 24 -httpd /usr/share/kasmvnc/www -sslOnly 1 -FrameRate=24 -BlacklistThreshold=0 -FreeKeyMappings -PreferBandwidth -DynamicQualityMin=4 -DynamicQualityMax=7 -DLP_ClipDelay=0 -interface 0.0.0.0 -websocketPort 6901 -BlacklistThreshold 5 -http-header Cross-Origin-Embedder-Policy=require-corp -http-header Cross-Origin-Opener-Policy=same-origin -FrameRate 60 -DynamicQualityMin 7 -WebpVideoQuality -1 -UseIPv4 1 -VideoScaling 2 -AvoidShiftNumLock 0 -geometry 1024x768 -VideoTime 5 -SendPrimary 0 -DynamicQualityMax 8 -AcceptCutText 1 -BlacklistTimeout 10 -KasmPasswordFile /home/kasm-user/.kasmpasswd -ImprovedHextile 1 -fp /usr/share/fonts/X11//Type1 -RawKeyboard 0 -VideoOutTime 3 -UseIPv6 1 -AcceptPointerEvents 1 -QueryConnect 0 -MaxConnectionTime 0 -udpFullFrameFrequency 0 -RectThreads 0 -DLP_ClipTypes chromium/x-web-custom-data,text/html,image/png -DLP_KeyRateLimit 0 -VideoArea 45 -AcceptKeyEvents 1 -IdleTimeout 0 -PublicIP 127.0.0.1 -IgnoreClientSettingsKasm 0 -DLP_Log off -MaxVideoResolution 1920x1080 -AllowOverride AcceptPointerEvents -DisconnectClients 0 -MaxDisconnectionTime 0 -cert /home/kasm-user/.vnc/self.pem -auth /home/kasm-user/.Xauthority -DLP_ClipSendMax 0 -DLP_RegionAllowRelease 0 -CompareFB 2 -DLP_RegionAllowClick 0 -JpegVideoQuality -1 -PrintVideoArea 0 -DLP_ClipAcceptMax 0 -DLP_ClipDelay 0 -Log "*:stdout:100" -MaxIdleTime 0 -AcceptSetDesktopSize 1 -desktop "7c50f0140db4:1 (kasm-user)" -key /home/kasm-user/.vnc/self.pem -TreatLossless 10 -SendCutText 1 -QueryConnectTimeout 10 -rfbauth /home/kasm-user/.vnc/passwd -rfbwait 30000 -rfbport 5901
-             ├─123 /usr/bin/openbox --startup "/usr/lib/x86_64-linux-gnu/openbox-autostart OPENBOX"
-             ├─125 /dockerstartup/upload_server/kasm_upload_server --ssl --auth-token kasm_user:password --port 4902 --upload_dir /home/kasm-user/Uploads
-             ├─127 tail -f /home/kasm-user/.vnc/7c50f0140db4:1.log
-             ├─140 stalonetray -f 0
-             ├─142 /tmp/staticx-dIEFmd/kasm_upload_server --ssl --auth-token kasm_user:password --port 4902 --upload_dir /home/kasm-user/Uploads
-             ├─143 /tmp/staticx-dIEFmd/kasm_upload_server --ssl --auth-token kasm_user:password --port 4902 --upload_dir /home/kasm-user/Uploads
-             └─150 sleep 3
-
-Sep 23 09:11:59 7c50f0140db4 kasm_default_profile.sh[134]: ERROR: openbox-xdg-autostart requires PyXDG to be installed
-Sep 23 09:11:59 7c50f0140db4 kasm_default_profile.sh[127]:  2025-09-23 09:11:59,464 [DEBUG] Selection: Selection owner change for WM_S0
-Sep 23 09:11:59 7c50f0140db4 kasm_default_profile.sh[127]:  2025-09-23 09:11:59,841 [DEBUG] Selection: Selection owner change for _NET_SYSTEM_TRAY_S0
-Sep 23 09:12:01 7c50f0140db4 kasm_default_profile.sh[143]:  * Serving Flask app 'kasm_upload_server'
-Sep 23 09:12:01 7c50f0140db4 kasm_default_profile.sh[143]:  * Debug mode: off
-Sep 23 09:12:01 7c50f0140db4 kasm_default_profile.sh[143]: WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
-Sep 23 09:12:01 7c50f0140db4 kasm_default_profile.sh[143]:  * Running on all addresses (0.0.0.0)
-Sep 23 09:12:01 7c50f0140db4 kasm_default_profile.sh[143]:  * Running on https://127.0.0.1:4902
-Sep 23 09:12:01 7c50f0140db4 kasm_default_profile.sh[143]:  * Running on https://172.17.0.6:4902
-Sep 23 09:12:01 7c50f0140db4 kasm_default_profile.sh[143]: Press CTRL+C to quit
-```
-
 ## License
 
 [MIT](LICENSE). The Kasm Technologies copyright notice is retained because parts of this code derive from their MIT-licensed [workspaces-core-images](https://github.com/kasmtech/workspaces-core-images). The license applies to the source in this repository only, not to the software installed in the image (Ubuntu packages, KasmVNC, etc.), which keeps its own licenses.
 
-# References
+## References
 
 - Fork of [yusiwen/kasm-core-minimal](https://github.com/yusiwen/kasm-core-minimal)
 - https://github.com/kasmtech/workspaces-core-images
