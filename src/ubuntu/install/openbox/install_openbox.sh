@@ -36,10 +36,12 @@ if [[ "$DISTRO" = @(ubuntu|debian) ]]; then
   apt-get install -y --no-install-recommends \
     curl \
     dbus-x11 \
+    elementary-xfce-icon-theme \
     fonts-dejavu-core \
     fonts-noto-core \
     gir1.2-keybinder-3.0 \
     gir1.2-notify-0.7 \
+    hicolor-icon-theme \
     openbox \
     terminator \
     x11-xserver-utils \
@@ -69,6 +71,15 @@ if [[ "$DISTRO" = @(ubuntu|debian) ]]; then
   [[default]]
     use_system_font = False
     font = Noto Mono 10
+EOL
+
+  # Icon theme for systray apps (xfce4-clipman): without it GTK falls back
+  # to a dark glyph invisible on the dark tint2 panel. There is no
+  # XSettings manager, so GTK reads this file directly
+  mkdir -p /etc/gtk-3.0
+  cat >/etc/gtk-3.0/settings.ini <<EOL
+[Settings]
+gtk-icon-theme-name = elementary-xfce
 EOL
 
   # Prefer Noto for generic font families (system default font).
