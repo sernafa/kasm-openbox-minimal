@@ -31,6 +31,10 @@ function verify_profile_config {
         ln -sf $HOME/Downloads $HOME/Desktop/Downloads
     fi
 
+    # standard XDG user dirs: pcmanfm scans them on startup and warns
+    # for the missing ones
+    mkdir -p $HOME/Templates $HOME/Documents $HOME/Music $HOME/Pictures $HOME/Public $HOME/Videos
+
     if [[ "$(readlink -f $KASM_VNC_PATH/www/Downloads/Downloads)" != "$HOME/Downloads" ]]; then
         echo "Fixing Downloads RX Symlink"
         rm -f $KASM_VNC_PATH/www/Downloads/Downloads

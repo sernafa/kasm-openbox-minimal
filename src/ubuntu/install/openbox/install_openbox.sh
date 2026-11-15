@@ -85,6 +85,20 @@ EOL
 gtk-icon-theme-name = elementary-xfce
 EOL
 
+  # pcmanfm/libfm: use terminator explicitly (silences the
+  # x-terminal-emulator "very limited support" warning, and pcmanfm's
+  # "open in terminal" uses terminator). libfm-modules is deliberately NOT
+  # installed: on this GLib it triggers a storm of GLib-GIO CRITICALs, so
+  # instead an empty modules dir silences the startup warning
+  mkdir -p /etc/xdg/libfm
+  cat >/etc/xdg/libfm/libfm.conf <<EOL
+[config]
+single_click=0
+use_trash_icons=1
+terminal=terminator --working-directory=%s
+EOL
+  mkdir -p /usr/lib/*/libfm/modules
+
   # Prefer Noto for generic font families (system default font).
   # Must load BEFORE Debian's 60-latin.conf: fontconfig honors the first
   # <prefer> rule loaded for a generic family, and 60-latin.conf puts
